@@ -18,7 +18,10 @@ export default defineConfig(({ command }) => {
       vue(),
       renderer({
         resolve: {
-          serialport: () => ({platform: 'node'}), // specify as `node` platform
+          // C/C++ modules must be pre-bundle
+          serialport: { type: 'cjs' },
+          // `esm` modules only if Vite does not pre-bundle them correctly
+          got: { type: 'esm' },
         },
       }),
       electron([
