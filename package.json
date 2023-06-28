@@ -23,6 +23,9 @@
     "build": "vue-tsc --noEmit && vite build && electron-builder",
     "preview": "vite preview"
   },
+  "dependencies": {
+    "serialport": "^10.4.0"
+  },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.1.0",
     "electron": "^23.1.1",

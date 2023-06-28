@@ -16,6 +16,11 @@ export default defineConfig(({ command }) => {
   return {
     plugins: [
       vue(),
+      renderer({
+        resolve: {
+          serialport: () => ({platform: 'node'}), // specify as `node` platform
+        },
+      }),
       electron([
         {
           // Main-Process entry file of the Electron App.
@@ -33,7 +38,7 @@ export default defineConfig(({ command }) => {
               minify: isBuild,
               outDir: 'dist-electron/main',
               rollupOptions: {
-                external: Object.keys('dependencies' in pkg ? pkg.dependencies : {}),
+                external: Object.keys(pkg.dependencies),
               },
             },
           },
@@ -41,7 +46,7 @@ export default defineConfig(({ command }) => {
         {
           entry: 'electron/preload/index.ts',
           onstart(options) {
-            // Notify the Renderer-Process to reload the page when the Preload-Scripts build is complete, 
+            // Notify the Renderer-Process to reload the page when the Preload-Scripts build is complete,
             // instead of restarting the entire Electron App.
             options.reload()
           },
@@ -51,14 +56,13 @@ export default defineConfig(({ command }) => {
               minify: isBuild,
               outDir: 'dist-electron/preload',
               rollupOptions: {
-                external: Object.keys('dependencies' in pkg ? pkg.dependencies : {}),
+                external: Object.keys(pkg.dependencies),
               },
             },
           },
         }
       ]),
       // Use Node.js API in the Renderer-process
-      renderer(),
     ],
     server: process.env.VSCODE_DEBUG && (() => {
       const url = new URL(pkg.debug.env.VITE_DEV_SERVER_URL)

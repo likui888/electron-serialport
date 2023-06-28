@@ -1,7 +1,11 @@
 <script setup lang="ts">
 import HelloWorld from './components/HelloWorld.vue'
+import {SerialPort} from "serialport";
 
 console.log("[App.vue]", `Hello world from Electron ${process.versions.electron}!`)
+SerialPort.list().then(value => {
+    console.log("serial port list", value)
+})
 </script>
 
 <template>
